@@ -1,0 +1,63 @@
+html {
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+
+  @media (max-width: 1800px) {
+    font-size: 15px;
+  }
+
+  @media (max-width: 1600px) {
+    font-size: 14px;
+  }
+
+  @media (max-width: 1200px) {
+    font-size: 13px;
+  }
+
+  @media (max-width: 1100px) {
+    font-size: 12px;
+  }
+
+  @media (max-width: 900px) {
+    font-size: 10px;
+  }
+
+  @media (max-width: 736px) {
+    font-size: 9px;
+  }
+
+  @media (max-width: 667px) {
+    font-size: 8px;
+  }
+
+  @media (max-height: 380px) {
+    font-size: 7px;
+  }
+}
+
+body {
+  @import url('https://fonts.googleapis.com/css2?family=Borel&family=Patua+One&display=swap');
+  
+  margin: 0;
+  padding: 0;
+  background-color: rgb(43, 43, 43);
+  color: #fff;
+}
+
+// scrollbar
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  background-color: rgba(163, 163, 163, 0.61);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(66, 233, 255, 0.4);
+  // background-color: var(--primary-1);
+}

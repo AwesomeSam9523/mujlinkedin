@@ -1,10 +1,8 @@
-// encrypt a password
-import { genSalt, hash as _hash } from 'bcrypt';
-const saltRounds = 10;
+import { createHash } from 'crypto';
 
 const encrypt = async (password) => {
-    const salt = await genSalt(saltRounds);
-    const hash = await _hash(password, salt);
+    const salt = process.env.SALT;
+    const hash = Buffer.from(createHash('sha256').update(password + salt).digest('hex')).toString('base64');
     return hash;
 }
 

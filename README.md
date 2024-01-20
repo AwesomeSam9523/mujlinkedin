@@ -1,1 +1,7 @@
-# MUJ LinkedIn Server
+# MUJ LinkedIn
+
+### Login
+![Alt text](images/image.png)
+
+### Feed (WIP)
+![Alt text](images/image2.png)
