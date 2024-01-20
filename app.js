@@ -8,6 +8,7 @@ import { verifyToken } from './utils/tokenValidator.js';
 // Modules
 import loginManager from './modules/login.js';
 import userManager from './modules/user.js';
+import postManager from './modules/post.js';
 
 dotenv.config();
 
@@ -26,10 +27,7 @@ app.use(bodyParser.json());
 
 app.use('/login', loginManager);
 app.use('/user', userManager);
-
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
+app.use('/post', postManager);
 
 app.get('/verify', (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
@@ -41,7 +39,7 @@ app.get('/verify', (req, res) => {
         return res.status(401).json({ message: 'Unauthorized!' });
     }
     console.log(decoded);
-    res.json({ message: 'Hello World!' });
+    res.json({ success: true });
 });
 
 app.listen(port, () => {

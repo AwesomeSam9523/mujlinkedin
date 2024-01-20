@@ -1,7 +1,7 @@
 /* eslint-disable */
 import axios from 'axios';
 import * as Vue from 'vue';
-const token = localStorage.getItem("token")
+let token = localStorage.getItem("token")
 const url = 'http://localhost:3000';
 import { useToast } from 'vue-toastification'
 const toast = useToast()
@@ -29,6 +29,11 @@ export class APIService {
     //     type: "error",
     //     text: messages[res.response.data.code]
     //   })
+    // if (res?.response?.status === 401 && window.location.pathname !== "/login") {
+    //   localStorage.removeItem("token");
+    //   window.location.href = "/login";
+    // }
+
     if (res?.response?.data?.message) {
       toast.error(res.response.data.message);
     }
@@ -37,19 +42,22 @@ export class APIService {
   }
 
   get(path, payload) {
+    token = localStorage.getItem("token");
     return this.service
-      .get(`${url}${path}`, { ...payload })
+      .get(`${url}${path}`, { ...payload, headers: { Authorization: "Bearer " + token } })
       .then(res => this.handleSuccess(res))
       .catch(e => this.handleError(e, path, payload, "get"))
   }
 
   post(path, payload) {
+    token = localStorage.getItem("token");
     return this.service
       .request({
         method: "POST",
         url: `${url}${path}`,
         responseType: "json",
         data: payload,
+        headers: { Authorization: "Bearer " + token }
       })
       .then(res => this.handleSuccess(res))
       .catch(res => this.handleError(res, path, payload, "post"))

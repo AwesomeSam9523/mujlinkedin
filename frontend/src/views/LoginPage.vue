@@ -30,9 +30,9 @@
         </div>
       </div>
       <div class="buttons">
-        <button class="login" v-if="isRegistering" @click="isRegistering = false">Back</button>
+        <button class="login" v-if="isRegistering" @click="register">Done</button>
         <button class="login" @click="login" v-else>Login</button>
-        <button class="register" v-if="isRegistering" @click="register">Done</button>
+        <button class="register" v-if="isRegistering" @click="isRegistering = false">Back</button>
         <button class="register" v-else @click="isRegistering = true">Register</button>
       </div>
     </div>
@@ -59,6 +59,7 @@ export default {
         const { data } = await service.post('/login', { email, password });
         const { token } = data;
         localStorage.setItem('token', token);
+        console.log('set new token login');
         this.$router.push('/feed');
       } catch (error) {
         console.log(error);
@@ -74,7 +75,8 @@ export default {
         const { data } = await service.post('/login/new', { name, email, password});
         const { token } = data;
         localStorage.setItem('token', token);
-        this.$router.push('/profile');
+        console.log('set new token register');
+        this.$router.push('/feed');
       } catch (error) {
         console.log(error);
       }

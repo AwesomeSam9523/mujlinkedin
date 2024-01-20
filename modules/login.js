@@ -6,7 +6,7 @@ import { generateToken, verifyToken } from '../utils/tokenValidator.js';
 const router = Router();
 
 function generateUserId() {
-    return Math.floor(Math.random() * 1000000);
+    return Math.floor(Math.random() * 1000000).toString();
 }
 
 router.post('/', async (req, res, next) => {
@@ -26,7 +26,7 @@ router.post('/', async (req, res, next) => {
         const data2 = await db.query(query2, [email, password]);
         if (data2.rowCount > 0) {
             const token = generateToken(data.rows[0].userId);
-            res.status(200).json({ message: 'Login successful', token: token });
+            res.json({ message: 'Login successful', token: token });
         } else {
             res.status(401).json({ message: 'Invalid username/password' });
         }

@@ -18,8 +18,10 @@ export default {
     try {
       const { response } = await service.get('/verify');
       console.log(response);
+      if (response.success)
+        this.$router.push('/feed');
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.$router.push('/login');
     }
   }

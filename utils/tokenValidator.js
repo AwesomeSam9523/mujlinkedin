@@ -10,6 +10,7 @@ function verifyToken(token) {
     // verify token
     try {
         const decoded = verify(token, jwtSecret);
+        decoded.userId = parseInt(decoded.userId);
         return decoded;
     } catch (err) {
         console.log(err);
@@ -19,7 +20,7 @@ function verifyToken(token) {
 
 function generateToken(userId) {
     // generate token
-    const token = jwt.sign({userId: userId}, jwtSecret, { expiresIn: '1d' });
+    const token = jwt.sign({userId}, jwtSecret, { expiresIn: '1d' });
     return token;
 }
 
