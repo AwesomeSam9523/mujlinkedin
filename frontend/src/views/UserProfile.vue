@@ -128,10 +128,9 @@ export default {
 
 <style lang="scss" scoped>
 .modal {
-  width: 52%;
-  height: 50%;
+  width: 100vw;
+  height: 100vh;
   background-color: rgb(18, 18, 18);
-  border: 1px solid white;
   display: flex;
   flex-direction: row;
 }

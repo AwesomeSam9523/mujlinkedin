@@ -13,14 +13,14 @@
         <div class="icon"><i class="fa-solid fa-tower-broadcast"></i></div>
         <div class="text">Connections</div>
       </div>
-      <div class="item">
+      <!-- <div class="item">
         <div class="icon"><i class="fa-solid fa-laptop-code"></i></div>
         <div class="text">Projects</div>
       </div>
       <div class="item">
         <div class="icon"><i class="fa-brands fa-telegram"></i></div>
         <div class="text">Messages</div>
-      </div>
+      </div> -->
       <div class="item">
         <div class="icon"><i class="fa-solid fa-bell"></i></div>
         <div class="text">Notifications</div>
@@ -94,18 +94,18 @@
         <label>{{ userData?.degree }}</label>
       </div>
       <div class="tools">
-        <div class="tool" @click="userProfileModal">
+        <div class="tool" @click="openUserProfile">
           <div class="icon tooltip">
             <i class="fa-solid fa-user"></i>
             <span class="tooltiptext">My Profile</span>
           </div>
         </div>
-        <div class="tool">
+        <!-- <div class="tool">
           <div class="icon tooltip">
             <i class="fa-solid fa-cog"></i>
             <span class="tooltiptext">Settings</span>
           </div>
-        </div>
+        </div> -->
         <div class="tool" @click="logout">
           <div class="icon tooltip">
             <i class="fa-solid fa-sign-out"></i>
@@ -261,6 +261,10 @@ export default {
       } catch (err) {
         console.log(err);
       }
+    },
+
+    openUserProfile() {
+      this.$router.push(`/profile/${this.userData.userId}`);
     }
   }
 }
@@ -297,15 +301,17 @@ export default {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  margin-left: 8rem;
+  margin-left: 9rem;
   margin-top: 5rem;
 }
 
 .logo-text {
-  font-family: 'Patua One', monospace;
-  font-size: 1.75rem;
-  margin-left: 0.5rem;
+  font-family: "Patua One", monospace;
+  font-size: 2.5rem;
+  margin-left: 1.5rem;
   color: #fff;
+  display: flex;
+  flex-direction: column;
 }
 
 .left-bar {
@@ -325,8 +331,8 @@ export default {
 .right-bar {
   width: 15%;
   height: 100%;
-  background-color: #000;
-  transform: translate(100%);
+  background-color: #f5a044d1;
+  color: #000;
   transition: all 0.2s ease-in-out;
 }
 
@@ -501,7 +507,6 @@ export default {
   font-size: 1.5rem;
   margin-top: 1rem;
   margin-left: 1rem;
-  color: #fff;
 }
 
 .articles {
@@ -518,7 +523,6 @@ export default {
   font-weight: 300;
   font-size: 1rem;
   margin-bottom: 0.5rem;
-  color: #fff;
   text-align: left;
 }
 
