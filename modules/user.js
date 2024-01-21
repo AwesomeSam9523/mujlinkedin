@@ -41,7 +41,7 @@ router.get('/:userId', async (req, res, next) => {
     }
 });
 
-router.get('/clubs', async (req, res, next) => {
+router.post('/clubs', async (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
     const sub = verifyToken(token);
     if (!sub) {
@@ -50,8 +50,9 @@ router.get('/clubs', async (req, res, next) => {
     }
 
     try {
+        const { userId } = req.body;
         const query = `SELECT * FROM "Clubs" WHERE "userId" = $1`;
-        const data = await db.query(query, [sub.userId]);
+        const data = await db.query(query, [userId]);
         res.status(200).json(data.rows);
     } catch (error) {
         res.status(500).json({ message: 'Unknown error occured' });

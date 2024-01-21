@@ -37,8 +37,12 @@ router.post('/', async (req, res, next) => {
 
 router.post('/new', async (req, res, next) => {
     try {
-        let { email, password, name } = req.body;
+        let { email, password, name, dob, gender, skills, clubs } = req.body;
         email = email.toLowerCase();
+        if (!email || !password || !name || !dob || !gender) {
+            res.status(400).json({ message: 'Missing fields' });
+            return;
+        }
         // start a transaction
         await db.query('BEGIN');
 
@@ -56,7 +60,7 @@ router.post('/new', async (req, res, next) => {
         password = await encrypt(password);
         await db.query(query, [userId, email, password]);
 
-        const query2 = `INSERT INTO "Users" ("userId", "email", "displayName") VALUES ($1, $2, $3)`;
+        const query2 = `INSERT INTO "Users" ("userId", "email", "displayName", "dob", ) VALUES ($1, $2, $3)`;
         await db.query(query2, [userId, email, name]);
 
         const token = generateToken(userId);

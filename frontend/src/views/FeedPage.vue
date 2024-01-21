@@ -2,9 +2,12 @@
 <div class="cont">
   <div class="left-bar">
     <div class="logo-cont">
-      <div class="logo"></div>
-      <div class="logo-text">MUJ LinkedIn</div>
+      <div class="logo-text">
+        <span>MUJ</span>
+        <span>LinkedIn</span>
+      </div>
     </div>
+    <div class="logo"></div>
     <div class="left-menu">
       <div class="item">
         <div class="icon"><i class="fa-solid fa-tower-broadcast"></i></div>
@@ -22,7 +25,7 @@
         <div class="icon"><i class="fa-solid fa-bell"></i></div>
         <div class="text">Notifications</div>
       </div>
-      <div class="item" @click="createPostModal">
+      <div class="item post-item" @click="createPostModal">
         <div class="icon"><i class="fa-solid fa-arrow-up-from-bracket"></i></div>
         <div class="text">Create a Post</div>
       </div>
@@ -30,7 +33,7 @@
   </div>
   <div class="main">
     <div class="search-bar">
-      <input type="text" placeholder="Search for people, projects, and more..." />
+      <input type="text" placeholder="Search for people, projects, and more..." @input="search($event.target.value)" />
     </div>
     <div class="campus-news"></div>
     <div class="feed">
@@ -62,22 +65,20 @@
           </div>
         </div>
         <div class="post-divider"></div>
-        <div class="post-bottom">
+        <div class="post-bottom" :style="{ marginBottom: item.likeCount == 0 ? '0.5rem' : '0px' }">
           <div class="left">
             <button class="post-btn" :class="item.likedByMe ? 'like' : 'unlike'" @click="likeUnlike(item)">
               <i class="fa-solid fa-thumbs-up"></i>
             </button>
-            <button class="post-btn comment">
+            <!-- <button class="post-btn comment">
               <i class="fa-solid fa-comment"></i>
-            </button>
-            <!-- <button class="post-btn share">
-              <i class="fa-solid fa-share"></i>
             </button> -->
           </div>
           <div class="right">
             <label>Created {{ getRelativePostDate(item.createdAt) }}</label>
           </div>
         </div>
+        <span class="like-count" v-if="item.likeCount != 0">{{ item.likeCount }}</span>
       </div>
     </div>
   </div>
@@ -135,19 +136,21 @@ import service from '@/service';
 /* eslint-disable no-unused-vars */
 import { openModal } from "jenesius-vue-modal";
 import CreatePost from '@/modals/CreatePost.vue';
-import UserProfile from '@/modals/UserProfile.vue';
+// import UserProfile from '@/modals/UserProfile.vue';
 
 export default {
   data() {
     return {
       userData: null,
       feed: [],
+      lastInterval: null,
     }
   },
   async created() {
     try {
       const { data } = await service.get('/user');
       this.userData = data;
+      localStorage.setItem('userId', data.userId);
       const feedData = await service.get('/post/feed');
       this.feed = feedData.data.posts;
     } catch (err) {
@@ -162,12 +165,6 @@ export default {
 
     createPostModal() {
       openModal(CreatePost, {
-        userData: this.userData,
-      });
-    },
-
-    userProfileModal() {
-      openModal(UserProfile, {
         userData: this.userData,
       });
     },
@@ -228,7 +225,7 @@ export default {
       try {
         await service.post(`/post/like`, { postId: post.postId });
         post.likedByMe = true;
-        post.likes += 1;
+        post.likeCount += 1;
       } catch (err) {
         console.log(err);
       }
@@ -238,17 +235,32 @@ export default {
       try {
         await service.post(`/post/unlike`, { postId: post.postId });
         post.likedByMe = false;
-        post.likes -= 1;
+        post.likeCount -= 1;
       } catch (err) {
         console.log(err);
       }
     },
 
-    async viewProfile(userId) {
-      const { data } = await service.get(`/user/${userId}`);
-      openModal(UserProfile, {
-        userData: data,
-      });
+    viewProfile(userId) {
+      this.$router.push(`/profile/${userId}`);
+    },
+
+    search(query) {
+      if (this.lastInterval) {
+        clearTimeout(this.lastInterval);
+      }
+      this.lastInterval = setTimeout(() => {
+        this.searchQuery(query);
+      }, 500);
+    },
+
+    async searchQuery(query) {
+      try {
+        const { data } = await service.get(`/search?query=${query}`);
+        console.log(data);
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 }
@@ -265,12 +277,17 @@ export default {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  background-image: url(https://skilloutlook.com/wp-content/uploads/2021/06/Manipal-Jaipur-PhD-2021.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .logo-cont {
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-top: 5rem;
+  margin-left: 5rem;
 }
 
 .logo {
@@ -280,6 +297,8 @@ export default {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  margin-left: 8rem;
+  margin-top: 5rem;
 }
 
 .logo-text {
@@ -292,13 +311,11 @@ export default {
 .left-bar {
   width: 15%;
   height: 100%;
-  background-color: #000;
 }
 
 .main {
   width: 70%;
   height: 100%;
-  background-color: #101010;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -309,6 +326,13 @@ export default {
   width: 15%;
   height: 100%;
   background-color: #000;
+  transform: translate(100%);
+  transition: all 0.2s ease-in-out;
+}
+
+.right-bar.show {
+  transform: translate(0%);
+  transition: all 0.2s ease-in-out;
 }
 
 .icon {
@@ -316,22 +340,22 @@ export default {
 }
 
 .left-menu {
-  margin-left: 0.75rem;
-  margin-top: 60%;
+  margin-left: 2.75rem;
+  // margin-top: 60%;
 }
 
 .item {
   width: fit-content;
-  font-family: 'Borel', monospace;
-  font-weight: bold;
+  text-wrap: nowrap;
+  font-family: "Patua One", monospace;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  height: 4rem;
+  height: 6rem;
   margin: 0.5rem 0;
   padding: 0 1rem 0 0.5rem;
-  font-size: 1.5rem;
+  font-size: 2rem;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
@@ -342,15 +366,25 @@ export default {
   border-radius: 20px;
 }
 
+.post-item {
+  flex-direction: column-reverse;
+  height: 8rem;
+  justify-content: flex-end;
+  margin-left: 2rem;
+  margin-top: 2rem;
+}
+
+.post-item .icon {
+  margin-top: 1rem;
+  font-size: 3.5rem;
+}
+
 .icon, .text {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-}
-
-.text {
-  padding-top: 1rem;
+  margin: 0 0.5rem;
 }
 
 .notifications {
@@ -359,7 +393,7 @@ export default {
 }
 
 .column-heading {
-  font-family: 'Borel', monospace;
+  font-family: 'Patua One', monospace;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -416,6 +450,10 @@ export default {
   // margin-left: 0.675rem;
   font-family: 'Patua One';
   font-size: 1.75rem;
+  cursor: pointer;
+}
+
+.post-name label {
   cursor: pointer;
 }
 
@@ -490,20 +528,21 @@ export default {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin-top: 1rem;
+  margin-top: 3rem;
 }
 
 .search-bar input {
-  width: 75%;
+  width: 80%;
   height: 2.5rem;
-  border-radius: 10px;
-  border: 1px solid #fff;
+  border-radius: 5px;
   padding: 0.5rem;
-  font-family: 'Lato', monospace;
+  font-family: "Lato", monospace;
   font-weight: 400;
   font-size: 1rem;
-  color: #fff;
-  background-color: #000;
+  outline: none;
+  border: none;
+  background-color: #ffffff8c;
+  color: black;
 }
 
 .tooltip {
@@ -546,16 +585,23 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 5rem;
+  margin-top: 3rem;
 }
 
 .post {
   width: 80%;
   max-height: 30rem;
-  background-color: #252525;
+  background-color: #2525259c;
   margin-bottom: 2rem;
   color: #f1f1f1;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.like-count {
+  align-self: flex-start;
+  margin-left: 8.5%;
 }
 
 .post-top {

@@ -2,7 +2,7 @@
 import axios from 'axios';
 import * as Vue from 'vue';
 let token = localStorage.getItem("token")
-const url = 'http://localhost:3000';
+const url = 'http://192.168.8.146:3000';
 import { useToast } from 'vue-toastification'
 const toast = useToast()
 
