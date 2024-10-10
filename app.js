@@ -23,6 +23,7 @@ app.use(cors({
         'http://localhost:8082',
         'http://192.168.8.146:3000',
         'http://192.168.8.146:8080',
+        'https://mujlinked.vercel.app',
     ],
     optionsSuccessStatus: 200,
     credentials: true,
