@@ -20,6 +20,7 @@ app.use(cors({
     origin: [
         'http://localhost:3000',
         'http://localhost:8080',
+        'http://localhost:8082',
         'http://192.168.8.146:3000',
         'http://192.168.8.146:8080',
     ],
@@ -65,6 +66,10 @@ app.get('/search', async (req, res, next) => {
     }
 });
 
-app.listen(port, "0.0.0.0", () => {
-    console.log("Running at port " + port);
-})
+if (!process.env.VERCEL) {
+    app.listen(port, "0.0.0.0", () => {
+        console.log("Running at port " + port);
+    })
+}
+
+export default app;

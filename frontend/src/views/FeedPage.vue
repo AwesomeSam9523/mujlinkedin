@@ -13,14 +13,14 @@
         <div class="icon"><i class="fa-solid fa-tower-broadcast"></i></div>
         <div class="text">Connections</div>
       </div>
-      <!-- <div class="item">
+      <div class="item">
         <div class="icon"><i class="fa-solid fa-laptop-code"></i></div>
         <div class="text">Projects</div>
       </div>
       <div class="item">
         <div class="icon"><i class="fa-brands fa-telegram"></i></div>
         <div class="text">Messages</div>
-      </div> -->
+      </div>
       <div class="item">
         <div class="icon"><i class="fa-solid fa-bell"></i></div>
         <div class="text">Notifications</div>
@@ -65,20 +65,20 @@
           </div>
         </div>
         <div class="post-divider"></div>
-        <div class="post-bottom" :style="{ marginBottom: item.likeCount == 0 ? '0.5rem' : '0px' }">
+        <div class="post-bottom" :style="{ marginBottom: item.likeCount === 0 ? '0.5rem' : '0px' }">
           <div class="left">
             <button class="post-btn" :class="item.likedByMe ? 'like' : 'unlike'" @click="likeUnlike(item)">
               <i class="fa-solid fa-thumbs-up"></i>
             </button>
-            <!-- <button class="post-btn comment">
+            <button class="post-btn comment">
               <i class="fa-solid fa-comment"></i>
-            </button> -->
+            </button>
           </div>
           <div class="right">
             <label>Created {{ getRelativePostDate(item.createdAt) }}</label>
           </div>
         </div>
-        <span class="like-count" v-if="item.likeCount != 0">{{ item.likeCount }}</span>
+        <span class="like-count" v-if="item.likeCount !== 0">{{ item.likeCount }}</span>
       </div>
     </div>
   </div>
@@ -100,12 +100,12 @@
             <span class="tooltiptext">My Profile</span>
           </div>
         </div>
-        <!-- <div class="tool">
+        <div class="tool">
           <div class="icon tooltip">
             <i class="fa-solid fa-cog"></i>
             <span class="tooltiptext">Settings</span>
           </div>
-        </div> -->
+        </div>
         <div class="tool" @click="logout">
           <div class="icon tooltip">
             <i class="fa-solid fa-sign-out"></i>
@@ -225,7 +225,7 @@ export default {
       try {
         await service.post(`/post/like`, { postId: post.postId });
         post.likedByMe = true;
-        post.likeCount += 1;
+        post.likeCount = parseInt(post.likeCount) + 1;
       } catch (err) {
         console.log(err);
       }
@@ -235,7 +235,7 @@ export default {
       try {
         await service.post(`/post/unlike`, { postId: post.postId });
         post.likedByMe = false;
-        post.likeCount -= 1;
+        post.likeCount = parseInt(post.likeCount) - 1;
       } catch (err) {
         console.log(err);
       }
@@ -302,7 +302,7 @@ export default {
   background-position: center;
   background-repeat: no-repeat;
   margin-left: 9rem;
-  margin-top: 5rem;
+  margin-top: 1rem;
 }
 
 .logo-text {
@@ -352,7 +352,7 @@ export default {
 
 .item {
   width: fit-content;
-  text-wrap: nowrap;
+  text-wrap: none;
   font-family: "Patua One", monospace;
   display: flex;
   flex-direction: row;
@@ -454,7 +454,7 @@ export default {
 
 .post-name {
   // margin-left: 0.675rem;
-  font-family: 'Patua One';
+  font-family: 'Patua One', sans-serif;
   font-size: 1.75rem;
   cursor: pointer;
 }

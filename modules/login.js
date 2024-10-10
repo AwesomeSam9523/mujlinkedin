@@ -38,6 +38,8 @@ router.post('/', async (req, res, next) => {
 router.post('/new', async (req, res, next) => {
     try {
         let { email, password, name, dob, gender, skills, clubs } = req.body;
+        skills = skills || [];
+        clubs = clubs || [];
         email = email.toLowerCase();
         if (!email || !password || !name || !dob || !gender) {
             res.status(400).json({ message: 'Missing fields' });
@@ -60,8 +62,14 @@ router.post('/new', async (req, res, next) => {
         password = await encrypt(password);
         await db.query(query, [userId, email, password]);
 
-        const query2 = `INSERT INTO "Users" ("userId", "email", "displayName", "dob", ) VALUES ($1, $2, $3)`;
-        await db.query(query2, [userId, email, name]);
+        const query2 = `INSERT INTO "Users" ("userId", "email", "displayName", "dob", "gender", "skills", "clubs")
+        VALUES ($1, $2, $3, $4, $5, $6, $7)`;
+        await db.query(query2, [userId, email, name, dob, gender, skills, clubs]);
+
+        for (let i = 0; i < clubs.length; i++) {
+            const query3 = `INSERT INTO "Clubs" ("userId", "clubName", "role") VALUES ($1, $2, $3)`;
+            await db.query(query3, [userId, clubs[i], 'member']);
+        }
 
         const token = generateToken(userId);
         await db.query('COMMIT');
