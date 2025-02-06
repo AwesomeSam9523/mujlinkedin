@@ -14,7 +14,7 @@ import postManager from './modules/post.js';
 dotenv.config();
 
 const app = express();
-app.use(express.static('public'));
+// app.use(express.static('public'));
 const port = process.env.PORT || 3000;
 
 app.use(cors({
@@ -34,6 +34,10 @@ app.use(bodyParser.json());
 app.use('/login', loginManager);
 app.use('/user', userManager);
 app.use('/post', postManager);
+
+app.get('/avatar.png', (req, res) => {
+    res.sendFile('public/avatar.png', { root: '.' });
+});
 
 app.get('/verify', (req, res) => {
     const token = req.headers.authorization.split(' ')[1];
