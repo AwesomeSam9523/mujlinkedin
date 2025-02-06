@@ -2,8 +2,8 @@
 import axios from 'axios';
 import * as Vue from 'vue';
 let token = localStorage.getItem("token")
-// const url = 'https://mujlinkedin-backend.vercel.app';
-const url = 'http://localhost:3000';
+const url = 'https://mujlinkedin-backend.vercel.app';
+// const url = 'http://localhost:3000';
 import { useToast } from 'vue-toastification'
 const toast = useToast()
 
