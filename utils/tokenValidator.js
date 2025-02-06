@@ -1,7 +1,8 @@
 // use jwt to validate token
 import jwt from 'jsonwebtoken';
-const { verify } = jwt;
 import dotenv from 'dotenv';
+
+const { verify } = jwt;
 
 dotenv.config();
 const jwtSecret = process.env.JWT_SECRET;
@@ -20,8 +21,7 @@ function verifyToken(token) {
 
 function generateToken(userId) {
     // generate token
-    const token = jwt.sign({userId}, jwtSecret, { expiresIn: '1d' });
-    return token;
+    return jwt.sign({userId}, jwtSecret, {expiresIn: '1d'});
 }
 
 export { verifyToken, generateToken };

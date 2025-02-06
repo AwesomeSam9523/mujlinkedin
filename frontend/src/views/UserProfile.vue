@@ -8,7 +8,7 @@
         <b>Email:</b> {{ userData?.email.toLowerCase().split('@')[0] }}
       </div>
       <div class="field email">
-        <b>Year/Sem:</b> {{ getYearText(userData?.year) }} / {{ userData?.semester == 1 ? 'I' : 'II' }} Semester
+        <b>Year/Sem:</b> {{ getYearText(userData?.year) }} / {{ userData?.semester === 1 ? 'I' : 'II' }} Semester
       </div>
       <div class="divider2"></div>
       <div class="clubs" v-if="userClubs.length > 0">
@@ -119,7 +119,7 @@ export default {
         case 5:
           return '5th Year';
         default:
-          return 'Alumni';
+          return '2nd Year';
       }
     },
   }

@@ -14,7 +14,8 @@ import postManager from './modules/post.js';
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT;
+app.use(express.static('public'));
+const port = process.env.PORT || 3000;
 
 app.use(cors({
     origin: [
